@@ -1,0 +1,12 @@
+act
+  
+
+proc
+  BM1_Thruster = r_launch_signal . bm1_thruster_start . c_bm1_thruster_level(0) . (bm1_thruster_stop | s_bm1_detachable) . BM1_Thruster;
+  BM2_Thruster = r_launch_signal . bm2_thruster_start . c_bm2_thruster_level(0) . (bm2_thruster_stop | s_bm2_detachable) . BM2_Thruster;
+
+  LM_Thruster = r_launch_signal . lm_thruster_start .
+  ((c_lm_thruster_level(0) .) +
+   ((r_bm1_detachable | r_bm2_detachable) . sum n . n < 70000 -> c_altitude(n)))
+init
+  
