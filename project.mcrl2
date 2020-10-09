@@ -1,12 +1,97 @@
 act
-  
+  a_bm1_thruster_start,
+  a_bm2_thruster_start,
+  a_lm_thruster_start,
+  a_om_thruster_start,
+
+  a_bm1_thruster_stop,
+  a_bm2_thruster_stop,
+  a_lm_thruster_stop,
+  a_om_thruster_stop,
+
+  a_om_thruster_burst,
+
+  a_lm_detach_bm1,
+  a_lm_detach_bm2,
+  a_om_detach_lm,
+
+  a_om_remap_valves;
+
+  p_bm1_thruster_level,
+  p_bm2_thruster_level,
+  p_lm_thruster_level : Nat;
+  p_encounter_with_iss;
+
+  p_below_atmosphere : Bool;
+
+  s_launch_signal, r_launch_signal_bm1, r_launch_signal_bm2, r_launch_signal_lm, r_launch_signal, c_launch_signal;
+  s_bm1_stopped, s_bm2_stopped, r_bms_stopped, c_bms_stopped;
+  s_lm_stopped, r_lm_stopped, c_lm_stopped;
+  s_below_atmosphere, r_below_atmosphere, c_below_atmosphere;
+  s_om_detached, r_om_detached, c_om_detached;
+  s_om_detach_lm, r_om_detach_lm, c_om_detach_lm;
+  s_abort, r_abort, c_abort;
+
 
 proc
-  BM1_Thruster = r_launch_signal . bm1_thruster_start . c_bm1_thruster_level(0) . (bm1_thruster_stop | s_bm1_detachable) . BM1_Thruster;
-  BM2_Thruster = r_launch_signal . bm2_thruster_start . c_bm2_thruster_level(0) . (bm2_thruster_stop | s_bm2_detachable) . BM2_Thruster;
+  Starter = s_launch_signal . delta;
 
-  LM_Thruster = r_launch_signal . lm_thruster_start .
-  ((c_lm_thruster_level(0) .) +
-   ((r_bm1_detachable | r_bm2_detachable) . sum n . n < 70000 -> c_altitude(n)))
+  BM1_Thruster = r_launch_signal_bm1 . a_bm1_thruster_start . BM1_Thruster_active;
+  BM1_Thruster_active = p_bm1_thruster_level(0) . a_bm1_thruster_stop . s_bm1_stopped . delta;
+
+  BM2_Thruster = r_launch_signal_bm2 . a_bm2_thruster_start . BM2_Thruster_active;
+  BM2_Thruster_active = p_bm2_thruster_level(0) . a_bm2_thruster_stop . s_bm2_stopped . delta;
+
+  LM_Thruster = r_launch_signal_lm . a_lm_thruster_start . LM_Thruster_active;
+  LM_Thruster_active = p_lm_thruster_level(0) . a_lm_thruster_stop . s_lm_stopped . delta;
+
+  LM_Detachment = r_bms_stopped . (a_lm_detach_bm1 | a_lm_detach_bm2) . delta;
+
+  OM_Thruster = r_lm_stopped . s_om_detach_lm . a_om_thruster_start . p_encounter_with_iss . a_om_remap_valves . r_om_detached . a_om_thruster_burst . delta;
+
+  OM_Detachment = r_om_detach_lm . a_om_detach_lm . OM_Detachment;
+
 init
-  
+  allow({
+    a_bm1_thruster_start,
+    a_bm2_thruster_start,
+    a_lm_thruster_start,
+    a_om_thruster_start,
+
+    a_bm1_thruster_stop,
+    a_bm2_thruster_stop,
+    a_lm_thruster_stop,
+    a_om_thruster_stop,
+
+    a_om_thruster_burst,
+
+    a_lm_detach_bm1,
+    a_lm_detach_bm2,
+    a_om_detach_lm,
+
+    a_om_remap_valves,
+
+    p_bm1_thruster_level,
+    p_bm2_thruster_level,
+    p_lm_thruster_level,
+    p_encounter_with_iss,
+
+    c_launch_signal,
+    c_bms_stopped,
+    c_lm_stopped,
+    c_below_atmosphere,
+    c_om_detached,
+    c_om_detach_lm,
+    c_abort
+  },
+    comm({
+      s_launch_signal | r_launch_signal_bm1 | r_launch_signal_bm2 | r_launch_signal_lm -> c_launch_signal,
+%      s_launch_signal | r_launch_signal -> c_launch_signal,
+      s_bm1_stopped | s_bm2_stopped | r_bms_stopped -> c_bms_stopped,
+      s_lm_stopped | r_lm_stopped -> c_lm_stopped,
+      s_below_atmosphere | r_below_atmosphere -> c_below_atmosphere,
+      s_om_detached | r_om_detached -> c_om_detached,
+      s_om_detach_lm | r_om_detach_lm -> c_om_detach_lm,
+      s_abort | r_abort -> c_abort
+    },
+    Starter || BM1_Thruster || BM2_Thruster || LM_Thruster || LM_Detachment || OM_Thruster || OM_Detachment));
