@@ -91,3 +91,9 @@ true &&
 
 % !!! NOT MODELLED YET !!!
 %[!a_sm_detach_om* . a_om_thruster_burst] false
+
+% -------------------------------------------------------------
+% The spacecraft eventually breaches the atmosphere after the first thrusters have been fired. (L)
+% -------------------------------------------------------------
+
+[true* . (a_bm1_thruster_start && a_bm2_thruster_start && a_lm_thruster_start)] <true* . p_below_atmosphere(false)> true
