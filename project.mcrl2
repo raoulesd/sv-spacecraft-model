@@ -3,6 +3,7 @@ act
   a_bm2_thruster_start,
   a_lm_thruster_start,
   a_om_thruster_start,
+  a_sm_thruster_start,
 
   a_bm1_thruster_stop,
   a_bm2_thruster_stop,
@@ -10,6 +11,7 @@ act
   a_om_thruster_stop,
 
   a_om_thruster_burst,
+  a_sm_steer_thrusters,
 
   a_lm_detach_bm1,
   a_lm_detach_bm2,
