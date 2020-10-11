@@ -16,6 +16,7 @@ act
   a_lm_detach_bm1,
   a_lm_detach_bm2,
   a_om_detach_lm,
+  a_sm_detach_om,
 
   a_om_remap_valves,
   
