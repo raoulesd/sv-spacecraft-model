@@ -15,7 +15,9 @@ act
   a_lm_detach_bm2,
   a_om_detach_lm,
 
-  a_om_remap_valves;
+  a_om_remap_valves,
+  
+  a_cm_detach_cover;
 
   p_bm1_thruster_level,
   p_bm2_thruster_level,
