@@ -1,0 +1,104 @@
+% -------------------------------------------------------------
+% To lift the spacecraft from the ground LM, BM1 and BM2 are all used
+% simultaneously.  (L)
+% -------------------------------------------------------------
+true &&
+
+% -------------------------------------------------------------
+% BM1 and BM2 must not detach from LM before their fuel is depleted. (S)
+% -------------------------------------------------------------
+
+[!(p_bm1_thruster_level(0) || p_bm1_thruster_level(0))* . (a_lm_detach_bm1 || a_lm_detach_bm2)] false
+&&
+
+% -------------------------------------------------------------
+% LM must not detach from OM before its fuel is depleted. (S)
+% -------------------------------------------------------------
+
+[!p_lm_thruster_level(0)* . a_om_detach_lm] false
+&&
+
+% -------------------------------------------------------------
+% BM1 and BM2 must have depleted their fuel before the spacecraft breaches
+% the atmosphere.  (S)
+% -------------------------------------------------------------
+
+[!(p_bm1_thruster_level(0) && p_bm2_thruster_level(0))* . p_below_atmosphere(false)] false
+&&
+
+% -------------------------------------------------------------
+% If either of BM1 or BM2 has depleted their fuel then the other should stop
+% firing and should fire not fire again during the mission cycle.  (S)
+
+% -------------------------------------------------------------
+
+%[p_bm1_thruster_level(0) . true* . a_bm2_thruster_stop] true && [p_bm2_thruster_level(0) . true* .  a_bm1_thruster_stop] true
+
+[p_bm1_thruster_level(0) . true* . a_bm2_thruster_stop] true && [p_bm2_thruster_level(0) . true* .  a_bm1_thruster_stop] true && 
+[p_bm1_thruster_level(0) . true* . a_bm2_thruster_stop] <true* . a_bm1_thruster_start> false && 
+[p_bm1_thruster_level(0) . true* . a_bm2_thruster_stop] <true* . a_bm2_thruster_start> false
+
+&&
+
+% -------------------------------------------------------------
+% The fuel of LM must not be depleted before BM1 and BM2 are detached. (S)
+% -------------------------------------------------------------
+
+[!p_lm_thruster_level(0)* . (a_lm_detach_bm2 || a_lm_detach_bm2)] false
+&&
+
+% -------------------------------------------------------------
+% BM1,  BM2  and  LM  must be turned off before they are detached and
+% jettisoned.  (S)
+% -------------------------------------------------------------
+
+[!(a_lm_thruster_stop && a_bm1_thruster_stop && a_bm2_thruster_stop)* . (a_om_detach_lm && a_lm_detach_bm1 && a_lm_detach_bm2)] false
+&&
+
+% -------------------------------------------------------------
+% When the ascent cover of the CM detaches LM, BM1 and BM2 must already be
+% detached.  (S)
+% -------------------------------------------------------------
+
+[!(a_om_detach_lm && a_lm_detach_bm1 && a_lm_detach_bm2)] <a_cm_detach_cover> false
+%&&
+
+% -------------------------------------------------------------
+% The thrusters of SM must be turned on before they are used for steering. (S)
+% -------------------------------------------------------------
+
+%[!a_sm_thruster_start* . a_sm_steer_thrusters] false
+%&&
+
+% -------------------------------------------------------------
+% The OM can only be detached after the ground team signals that the ISS is reached. (S)
+% -------------------------------------------------------------
+
+%[!om_detach* p_encounter_with_iss] false
+%&&
+
+% -------------------------------------------------------------
+% Only if the valves in the steering thrusters are remapped, then the OM is
+% allowed to be detached.(S)
+% -------------------------------------------------------------
+
+%[!a_om_remap_valves* om_detach] false
+%&&
+
+% -------------------------------------------------------------
+% Only after the OM is detached, it fires its thrusters to get clear from the
+% SM. (S)
+% -------------------------------------------------------------
+
+%[!om_detach* a_om_thruster_burst] false
+
+
+
+
+
+
+
+
+
+
+
