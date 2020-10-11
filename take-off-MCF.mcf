@@ -32,12 +32,9 @@ true &&
 
 % -------------------------------------------------------------
 
-%[p_bm1_thruster_level(0) . true* . a_bm2_thruster_stop] true && [p_bm2_thruster_level(0) . true* .  a_bm1_thruster_stop] true
-
 [p_bm1_thruster_level(0) . true* . a_bm2_thruster_stop] true && [p_bm2_thruster_level(0) . true* .  a_bm1_thruster_stop] true && 
 [p_bm1_thruster_level(0) . true* . a_bm2_thruster_stop] <true* . a_bm1_thruster_start> false && 
 [p_bm1_thruster_level(0) . true* . a_bm2_thruster_stop] <true* . a_bm2_thruster_start> false
-
 &&
 
 % -------------------------------------------------------------
@@ -60,21 +57,22 @@ true &&
 % detached.  (S)
 % -------------------------------------------------------------
 
-[!(a_om_detach_lm && a_lm_detach_bm1 && a_lm_detach_bm2)] <a_cm_detach_cover> false
-%&&
+[!(a_om_detach_lm && a_lm_detach_bm1 && a_lm_detach_bm2)*  . a_cm_detach_cover] false
+&&
 
 % -------------------------------------------------------------
 % The thrusters of SM must be turned on before they are used for steering. (S)
 % -------------------------------------------------------------
 
-%[!a_sm_thruster_start* . a_sm_steer_thrusters] false
-%&&
+[!a_sm_thruster_start* . a_sm_steer_thrusters] false
+&&
 
 % -------------------------------------------------------------
 % The OM can only be detached after the ground team signals that the ISS is reached. (S)
 % -------------------------------------------------------------
 
-%[!om_detach* p_encounter_with_iss] false
+% !!! NOT MODELLED YET !!!
+%[!a_sm_detach_om* . p_encounter_with_iss] false
 %&&
 
 % -------------------------------------------------------------
@@ -82,7 +80,8 @@ true &&
 % allowed to be detached.(S)
 % -------------------------------------------------------------
 
-%[!a_om_remap_valves* om_detach] false
+% !!! NOT MODELLED YET !!!
+%[!a_om_remap_valves* . a_sm_detach_om*] false
 %&&
 
 % -------------------------------------------------------------
@@ -90,15 +89,5 @@ true &&
 % SM. (S)
 % -------------------------------------------------------------
 
-%[!om_detach* a_om_thruster_burst] false
-
-
-
-
-
-
-
-
-
-
-
+% !!! NOT MODELLED YET !!!
+%[!a_sm_detach_om* . a_om_thruster_burst] false
