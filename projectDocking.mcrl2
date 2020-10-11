@@ -1,0 +1,33 @@
+act
+	p_docking_position, p_within_200m_radius, p_iss_identified, p_signal_received: Bool;
+	a_cm_lock_doors, a_cm_open_doors,
+	a_sm_steer_thrusters, a_sm_thruster_start, a_sm_thruster_stop,
+	r_sm_steer_thrusters, s_sm_steer_thrusters, c_sm_steer_thrusters, 
+	r_sm_thruster_stop, s_sm_thruster_stop, c_sm_thruster_stop,
+	r_sm_thruster_start, s_sm_thruster_start, c_sm_thruster_start;
+
+proc
+	Docking_controller = s_sm_thruster_start . p_iss_identified(true) . s_sm_steer_thrusters . p_within_200m_radius(false) . s_sm_thruster_stop . Waiting +
+							p_iss_identified(false) . Docking_controller;
+																		
+	Waiting =  p_signal_received(false) . Waiting +
+				p_signal_received(true) . s_sm_thruster_start . Approach_ISS;
+
+	Approach_ISS = p_docking_position(false) . Approach_ISS + 
+					p_docking_position(true) . s_sm_thruster_stop . a_cm_lock_doors . a_cm_open_doors;
+
+	SM_Thruster = r_sm_thruster_start . a_sm_thruster_start . SM_Thruster_active;
+	SM_Thruster_active	= r_sm_thruster_stop . a_sm_thruster_stop . SM_Thruster + 
+							r_sm_steer_thrusters . a_sm_steer_thrusters . SM_Thruster_active;
+																							
+init
+	allow({p_docking_position, p_within_200m_radius, p_iss_identified, p_signal_received,
+			a_cm_lock_doors, a_cm_open_doors,
+			a_sm_thruster_start, a_sm_thruster_stop, a_sm_steer_thrusters,
+			c_sm_steer_thrusters, c_sm_thruster_stop, c_sm_thruster_start
+	},
+	comm({r_sm_steer_thrusters | s_sm_steer_thrusters -> c_sm_steer_thrusters,
+			r_sm_thruster_stop | s_sm_thruster_stop -> c_sm_thruster_stop,
+			r_sm_thruster_start | s_sm_thruster_start -> c_sm_thruster_start
+		},
+	Docking_controller || SM_Thruster));
