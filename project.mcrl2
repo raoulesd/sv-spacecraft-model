@@ -18,7 +18,7 @@ act
   a_om_detach_lm,
   a_sm_detach_om,
 
-  a_om_remap_valves,
+  a_om_remap_valves;
   
   a_cm_detach_cover;
 
@@ -35,8 +35,8 @@ act
   s_below_atmosphere, r_below_atmosphere, c_below_atmosphere;
   s_om_detached, r_om_detached, c_om_detached;
   s_om_detach_lm, r_om_detach_lm, c_om_detach_lm;
+  s_sm_detach_om, r_sm_detach_om, c_sm_detach_om;
   s_abort, r_abort, c_abort;
-
 
 proc
   Starter = s_launch_signal . delta;
@@ -52,9 +52,11 @@ proc
 
   LM_Detachment = r_bms_stopped . (a_lm_detach_bm1 | a_lm_detach_bm2) . delta;
 
-  OM_Thruster = r_lm_stopped . s_om_detach_lm . a_om_thruster_start . p_encounter_with_iss . a_om_remap_valves . r_om_detached . a_om_thruster_burst . delta;
+  OM_Thruster = r_lm_stopped . s_om_detach_lm . a_om_thruster_start . p_encounter_with_iss . a_om_remap_valves . s_sm_detach_om . r_om_detached . a_om_thruster_burst . delta;
 
   OM_Detachment = r_om_detach_lm . a_om_detach_lm . OM_Detachment;
+
+  SM_Detachment = r_sm_detach_om . a_sm_detach_om  . s_om_detached . SM_Detachment;
 
 init
   allow({
@@ -97,6 +99,7 @@ init
       s_below_atmosphere | r_below_atmosphere -> c_below_atmosphere,
       s_om_detached | r_om_detached -> c_om_detached,
       s_om_detach_lm | r_om_detach_lm -> c_om_detach_lm,
+      s_sm_detach_om | r_sm_detach_om -> c_sm_detach_om,
       s_abort | r_abort -> c_abort
     },
     Starter || BM1_Thruster || BM2_Thruster || LM_Thruster || LM_Detachment || OM_Thruster || OM_Detachment));
