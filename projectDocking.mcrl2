@@ -8,7 +8,7 @@ act
 	r_sm_thruster_start, s_sm_thruster_start, c_sm_thruster_start;
 
 proc
-	Docking_controller = p_iss_identified(true) . s_sm_thruster_start . r_sm_thruster_active(true) . s_sm_steer_thrusters . p_within_200m_radius(false) . s_sm_thruster_stop . r_sm_thruster_active(false) 														. Waiting +
+	Docking_controller = p_iss_identified(true) . s_sm_thruster_start . r_sm_thruster_active(true) . s_sm_steer_thrusters . p_within_200m_radius(false) . s_sm_thruster_stop . r_sm_thruster_active(false) . Waiting +
 							p_iss_identified(false) . Docking_controller;
 																		
 	Waiting =  p_signal_received(false) . Waiting +
