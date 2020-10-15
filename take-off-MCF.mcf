@@ -29,6 +29,7 @@ true &&
 % -------------------------------------------------------------
 % If either of BM1 or BM2 has depleted their fuel then the other should stop
 % firing and should fire not fire again during the mission cycle.  (S)
+
 % -------------------------------------------------------------
 
 [p_bm1_thruster_level(0) . true* . a_bm2_thruster_stop] true && [p_bm2_thruster_level(0) . true* .  a_bm1_thruster_stop] true && 
@@ -70,9 +71,8 @@ true &&
 % The OM can only be detached after the ground team signals that the ISS is reached. (S)
 % -------------------------------------------------------------
 
-% !!! NOT MODELLED YET !!!
-%[!a_sm_detach_om* . p_encounter_with_iss] false
-%&&
+[!a_sm_detach_om* . p_encounter_with_iss . true* . a_sm_detach_om] true
+&&
 
 % -------------------------------------------------------------
 % Only if the valves in the steering thrusters are remapped, then the OM is
@@ -96,3 +96,17 @@ true &&
 % -------------------------------------------------------------
 
 [true* . (a_bm1_thruster_start && a_bm2_thruster_start && a_lm_thruster_start)] <true* . p_below_atmosphere(false)> true
+&&
+
+% -------------------------------------------------------------
+% The systems should be deadlock-free, except for the last state. (L & S)
+% -------------------------------------------------------------
+
+nu X.((<true>true) && [true]X) || <a_cm_open_doors> true
+&&
+
+% -------------------------------------------------------------
+% Eventually, all launch thrusters have been jettisoned. (L)
+% -------------------------------------------------------------
+
+mu X. (<true> X || ((<a_om_detach_lm> true) && (<a_lm_detach_bm1 | a_lm_detach_bm2> true)))
