@@ -75,6 +75,7 @@ init
     a_lm_detach_bm1,
     a_lm_detach_bm2,
     a_om_detach_lm,
+    a_sm_detach_om,
 
     a_om_remap_valves,
 
@@ -102,4 +103,4 @@ init
       s_sm_detach_om | r_sm_detach_om -> c_sm_detach_om,
       s_abort | r_abort -> c_abort
     },
-    Starter || BM1_Thruster || BM2_Thruster || LM_Thruster || LM_Detachment || OM_Thruster || OM_Detachment));
+    Starter || BM1_Thruster || BM2_Thruster || LM_Thruster || LM_Detachment || OM_Thruster || OM_Detachment || SM_Detachment));
