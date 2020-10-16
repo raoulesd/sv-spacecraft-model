@@ -1,7 +1,7 @@
 # sv-spacecraft-model
 A simplified MCRL2 model of a spacecraft according to a mission plan
 
-The model is partitioned into two phases, modeled seperately in `model-takeOff.mcrl2` and `model-docking.mcrl2`, showing the take off and docking phase respectively.
+The model is partitioned into two phases, modeled seperately in `model-takeOff.mcrl2` and `model-docking.mcrl2`, showing the take off and docking phase respectively. (Currently not up to date)
 
 Both are combined in the final model, to be found in `model.mcrl2`.
 
