@@ -44,6 +44,7 @@ act
   	s_sm_detach_om, r_sm_detach_om, c_sm_detach_om;
 	s_bms_detached, r_bms_detached, c_bms_detached;
 	s_lm_detached, r_lm_detached, c_lm_detached;
+	s_om_thruster_bursted, r_om_thruster_bursted, c_om_thruster_bursted;
   	s_abort, r_abort, c_abort;
 
 proc
@@ -61,13 +62,13 @@ proc
 
   	LM_Detachment = r_bms_stopped . (a_lm_detach_bm1 | a_lm_detach_bm2) . s_bms_detached . delta;
 
-  	OM_Thruster = r_lm_stopped . s_om_detach_lm . r_lm_detached . a_om_thruster_start . p_encounter_with_iss . a_om_remap_valves . s_sm_detach_om . r_om_detached . a_om_thruster_burst . delta;
+  	OM_Thruster = r_lm_stopped . s_om_detach_lm . r_lm_detached . a_om_thruster_start . p_encounter_with_iss . a_om_remap_valves . s_sm_detach_om . r_om_detached . a_om_thruster_burst .  s_om_thruster_bursted . delta;
 
   	OM_Detachment = r_bms_detached . r_om_detach_lm . a_om_detach_lm . s_lm_detached . delta;
 
   	SM_Detachment = r_sm_detach_om . a_sm_detach_om  . s_om_detached . Docking_controller;
 
-	Docking_controller = s_sm_thruster_start . p_iss_identified(true) .  r_sm_thruster_active(true) . s_sm_steer_thrusters . p_within_200m_radius(false) . s_sm_thruster_stop . r_sm_thruster_active(false) . Waiting +
+	Docking_controller = r_om_thruster_bursted . s_sm_thruster_start . p_iss_identified(true) .  r_sm_thruster_active(true) . s_sm_steer_thrusters . p_within_200m_radius(false) . s_sm_thruster_stop . r_sm_thruster_active(false) . Waiting +
 							p_iss_identified(false) . Docking_controller;
 
 	Waiting =  p_signal_received(false) . Waiting +
@@ -116,6 +117,7 @@ init
 		c_sm_detach_om,
 		c_bms_detached,
 		c_lm_detached,
+		c_om_thruster_bursted,
     c_abort
 	},
 	comm({r_sm_steer_thrusters | s_sm_steer_thrusters -> c_sm_steer_thrusters,
@@ -131,6 +133,7 @@ init
       s_sm_detach_om | r_sm_detach_om -> c_sm_detach_om,
 			s_bms_detached | r_bms_detached -> c_bms_detached,
 			s_lm_detached | r_lm_detached -> c_lm_detached,
+			s_om_thruster_bursted | r_om_thruster_bursted -> c_om_thruster_bursted,
       s_abort | r_abort -> c_abort
 		},
 	 Starter || BM1_Thruster || BM2_Thruster || LM_Thruster || LM_Detachment || OM_Thruster || OM_Detachment || SM_Detachment . Docking_controller || SM_Thruster));
