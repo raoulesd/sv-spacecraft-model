@@ -1,10 +1,4 @@
 % -------------------------------------------------------------
-% To lift the spacecraft from the ground LM, BM1 and BM2 are all used
-% simultaneously.  (L) Note: this requirement will be verified through model design.
-% -------------------------------------------------------------
-true &&
-
-% -------------------------------------------------------------
 % BM1 and BM2 must not detach from LM before their fuel is depleted. (S)
 % -------------------------------------------------------------
 
@@ -22,6 +16,7 @@ true &&
 % BM1 and BM2 must have depleted their fuel before the spacecraft breaches
 % the atmosphere.  (S) 
 % -------------------------------------------------------------
+
 [!(p_bm1_thruster_level(0) && p_bm2_thruster_level(0))* . p_below_atmosphere(false)] false
 &&
 
@@ -78,17 +73,16 @@ true &&
 % allowed to be detached.(S)
 % -------------------------------------------------------------
 
-% !!! NOT MODELLED YET !!!
-%[!a_om_remap_valves* . a_sm_detach_om*] false
-%&&
+[!a_om_remap_valves* . a_sm_detach_om] false
+&&
 
 % -------------------------------------------------------------
 % Only after the OM is detached, it fires its thrusters to get clear from the
 % SM. (S)
 % -------------------------------------------------------------
 
-% !!! NOT MODELLED YET !!!
-%[!a_sm_detach_om* . a_om_thruster_burst] false
+[!a_sm_detach_om* . a_om_thruster_burst] false
+&&
 
 % -------------------------------------------------------------
 % The spacecraft eventually breaches the atmosphere after the first thrusters have been fired. (L)
@@ -117,4 +111,3 @@ nu X.((<true>true) && [true]X) || <a_cm_open_doors> true
 % -------------------------------------------------------------
 
 [!a_om_detach_lm* . (a_lm_detach_bm1 | a_lm_detach_bm2)] false
-
