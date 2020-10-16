@@ -1,6 +1,6 @@
 % -------------------------------------------------------------
 % To lift the spacecraft from the ground LM, BM1 and BM2 are all used
-% simultaneously.  (L)
+% simultaneously.  (L) Note: this requirement will be verified through model design.
 % -------------------------------------------------------------
 true &&
 
@@ -20,7 +20,7 @@ true &&
 
 % -------------------------------------------------------------
 % BM1 and BM2 must have depleted their fuel before the spacecraft breaches
-% the atmosphere.  (S)
+% the atmosphere.  (S) 
 % -------------------------------------------------------------
 
 [!(p_bm1_thruster_level(0) && p_bm2_thruster_level(0))* . p_below_atmosphere(false)] false
@@ -110,3 +110,10 @@ nu X.((<true>true) && [true]X) || <a_cm_open_doors> true
 % -------------------------------------------------------------
 
 mu X. (<true> X || ((<a_om_detach_lm> true) && (<a_lm_detach_bm1 | a_lm_detach_bm2> true)))
+
+
+% -------------------------------------------------------------
+% The LM thrusters cannot be detached before the BM thrusters are detached . (S)
+% -------------------------------------------------------------
+
+[!a_om_detach_lm* . (a_lm_detach_bm1 | a_lm_detach_bm2)] false
