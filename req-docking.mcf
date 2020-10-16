@@ -17,7 +17,8 @@
 % The thrusters steer the spacecraft towards the ISS when it is identified. (L)
 % -------------------------------------------------------------
 
-% NOT YET IMPLEMENTED
+[true* . p_iss_identified(true)] <!c_sm_thruster_stop* . a_sm_steer_thrusters> true
+&&
 
 % -------------------------------------------------------------
 % The thrusters do not fire when the camera has not identified the ISS. (S)
@@ -32,18 +33,6 @@
 
 [true* . a_sm_thruster_stop . !p_signal_received(true)* . p_signal_received(true)] <c_sm_thruster_start> true
 &&
-
-% -------------------------------------------------------------
-% The spacecraft waits for the OK-signal after it has approached the ISS. (S)
-% -------------------------------------------------------------
-
-% NOT YET IMPLEMENTED
-
-% -------------------------------------------------------------
-% The ISS sends the OK-signal after the spacecraft has approached it. (S)
-% -------------------------------------------------------------
-
-% NOT YET IMPLEMENTED
 
 % -------------------------------------------------------------
 % The thrusters only move into docking position after the spacecraft receives the OK signal. (S)
