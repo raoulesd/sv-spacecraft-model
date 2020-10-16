@@ -44,6 +44,8 @@ act
   	s_om_detached, r_om_detached, c_om_detached;
   	s_om_detach_lm, r_om_detach_lm, c_om_detach_lm;
   	s_sm_detach_om, r_sm_detach_om, c_sm_detach_om;
+	s_bms_detached, r_bms_detached, c_bms_detached;
+	s_lm_detached, r_lm_detached, c_lm_detached;
   	s_abort, r_abort, c_abort;
 
 proc
@@ -59,11 +61,11 @@ proc
   	LM_Thruster = r_launch_signal_lm . a_lm_thruster_start . LM_Thruster_active;
   	LM_Thruster_active = p_lm_thruster_level(0) . a_lm_thruster_stop . s_lm_stopped . delta;
 
-  	LM_Detachment = r_bms_stopped . (a_lm_detach_bm1 | a_lm_detach_bm2) . delta;
+  	LM_Detachment = r_bms_stopped . (a_lm_detach_bm1 | a_lm_detach_bm2) . s_bms_detached . delta;
 
-  	OM_Thruster = r_lm_stopped . s_om_detach_lm . a_om_thruster_start . p_encounter_with_iss . a_om_remap_valves . s_sm_detach_om . r_om_detached . a_om_thruster_burst . delta;
+  	OM_Thruster = r_lm_stopped . s_om_detach_lm . r_lm_detached . a_om_thruster_start . p_encounter_with_iss . a_om_remap_valves . s_sm_detach_om . r_om_detached . a_om_thruster_burst . delta;
 
-  	OM_Detachment = r_om_detach_lm . a_om_detach_lm . delta;
+  	OM_Detachment = r_bms_detached . r_om_detach_lm . a_om_detach_lm . s_lm_detached . delta;
 
   	SM_Detachment = r_sm_detach_om . a_sm_detach_om  . s_om_detached . Docking_controller;
 
@@ -74,20 +76,20 @@ proc
 				p_signal_received(true) . s_sm_thruster_start .  Approach_ISS;
 
 	Approach_ISS = p_docking_position(false) . Approach_ISS + 
-					r_sm_thruster_active(true) . p_docking_position(true) . s_sm_thruster_stop . a_cm_lock_doors . a_cm_open_doors;
+					r_sm_thruster_active(true) . p_docking_position(true) . s_sm_thruster_stop . r_sm_thruster_active(false) . a_cm_lock_doors . a_cm_open_doors . delta;
 
 	SM_Thruster = r_sm_thruster_start . a_sm_thruster_start . s_sm_thruster_active(true) . SM_Thruster_active;
-	SM_Thruster_active	= r_sm_thruster_stop . a_sm_thruster_stop . s_sm_thruster_active(false) . SM_Thruster + 
+	SM_Thruster_active = r_sm_thruster_stop . a_sm_thruster_stop . s_sm_thruster_active(false) . SM_Thruster + 
 							r_sm_steer_thrusters . a_sm_steer_thrusters . SM_Thruster_active;
 																							
 init
 	allow({p_docking_position, p_within_200m_radius, p_iss_identified, p_signal_received,
-			a_cm_lock_doors, a_cm_open_doors,
-			a_sm_thruster_start, a_sm_thruster_stop, a_sm_steer_thrusters,
-			c_sm_steer_thrusters, c_sm_thruster_stop, c_sm_thruster_start,
-			c_sm_thruster_active,
+		a_cm_lock_doors, a_cm_open_doors,
+		a_sm_thruster_start, a_sm_thruster_stop, a_sm_steer_thrusters,
+		c_sm_steer_thrusters, c_sm_thruster_stop, c_sm_thruster_start,
+		c_sm_thruster_active,
 
-			a_bm1_thruster_start,
+		a_bm1_thruster_start,
     		a_bm2_thruster_start,
     		a_lm_thruster_start,
     		a_om_thruster_start,
@@ -97,15 +99,15 @@ init
     		a_lm_thruster_stop,
     		a_om_thruster_stop,
 
-   		 	a_om_thruster_burst,
+   		 a_om_thruster_burst,
 
     		a_lm_detach_bm1 | a_lm_detach_bm2,
     		a_om_detach_lm,
-			a_sm_detach_om,
+		a_sm_detach_om,
 
     		a_om_remap_valves,
 
-   		 	p_bm1_thruster_level,
+   		 p_bm1_thruster_level,
     		p_bm2_thruster_level,
     		p_lm_thruster_level,
     		p_encounter_with_iss,
@@ -116,7 +118,9 @@ init
     		c_below_atmosphere,
     		c_om_detached,
     		c_om_detach_lm,
-			c_sm_detach_om,
+		c_sm_detach_om,
+		c_bms_detached,
+		c_lm_detached,
     		c_abort
 	},
 	comm({r_sm_steer_thrusters | s_sm_steer_thrusters -> c_sm_steer_thrusters,
@@ -131,6 +135,8 @@ init
       		s_om_detached | r_om_detached -> c_om_detached,
       		s_om_detach_lm | r_om_detach_lm -> c_om_detach_lm,
       		s_sm_detach_om | r_sm_detach_om -> c_sm_detach_om,
+			s_bms_detached | r_bms_detached -> c_bms_detached,
+			s_lm_detached | r_lm_detached -> c_lm_detached,
       		s_abort | r_abort -> c_abort
 		},
 	 Starter || BM1_Thruster || BM2_Thruster || LM_Thruster || LM_Detachment || OM_Thruster || OM_Detachment || SM_Detachment . Docking_controller || SM_Thruster));
