@@ -1,0 +1,16 @@
+% -------------------------------------------------------------
+% BM1 and BM2 must have depleted their fuel before the spacecraft breaches
+% the atmosphere.  (S) 
+% -------------------------------------------------------------
+
+[!(p_bm1_thruster_level(0) && p_bm2_thruster_level(0))* . p_below_atmosphere(false)] false
+&&
+
+% -------------------------------------------------------------
+% If either of BM1 or BM2 has depleted their fuel then the other should stop
+% firing and should fire not fire again during the mission cycle.  (S)
+% -------------------------------------------------------------
+
+[p_bm1_thruster_level(0) . true* . a_bm2_thruster_stop] true && [p_bm2_thruster_level(0) . true* .  a_bm1_thruster_stop] true && 
+[p_bm1_thruster_level(0) . true* . a_bm2_thruster_stop] <true* . a_bm1_thruster_start> false && 
+[p_bm1_thruster_level(0) . true* . a_bm2_thruster_stop] <true* . a_bm2_thruster_start> false

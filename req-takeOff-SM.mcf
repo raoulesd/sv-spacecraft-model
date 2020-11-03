@@ -1,0 +1,19 @@
+% -------------------------------------------------------------
+% The thrusters of SM must be turned on before they are used for steering. (S)
+% -------------------------------------------------------------
+
+[!a_sm_thruster_start* . a_sm_steer_thrusters] false
+&&
+
+% -------------------------------------------------------------
+% The SM can only detach the OM after the ground team signals that it can be detached. (S)
+% -------------------------------------------------------------
+
+[!a_sm_detach_om* . p_encounter_with_iss . true* . a_sm_detach_om] true
+&&
+
+% -------------------------------------------------------------
+% The SM can only detach the OM if the OM has remapped the valves inthe steering thrusters.  (S)
+% -------------------------------------------------------------
+
+[!a_om_remap_valves* . a_sm_detach_om] false

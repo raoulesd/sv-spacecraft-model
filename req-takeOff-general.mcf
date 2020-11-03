@@ -1,0 +1,34 @@
+% -------------------------------------------------------------
+% BM1,  BM2  and  LM  must be turned off before they are detached and
+% jettisoned.  (S)
+% -------------------------------------------------------------
+
+[!(a_lm_thruster_stop && a_bm1_thruster_stop && a_bm2_thruster_stop)* . (a_om_detach_lm && a_lm_detach_bm1 && a_lm_detach_bm2)] false
+&&
+
+% -------------------------------------------------------------
+% When the BM1, BM2 and LM fire their thrusters the spacecraft eventuallybreaches the atmosphere.  (L)
+% -------------------------------------------------------------
+
+[true* . (a_bm1_thruster_start && a_bm2_thruster_start && a_lm_thruster_start)] <true* . p_below_atmosphere(false)> true
+&&
+
+% -------------------------------------------------------------
+% Eventually, all launch thrusters (BM1, BM2 and LM) have been jettisoned.(L)
+% -------------------------------------------------------------
+[!(a_lm_detach_bm2 | a_lm_detach_bm1)* . !a_om_detach_lm* . c_lm_detached] false
+&&
+
+% -------------------------------------------------------------
+% When the ascent cover of the CM detaches LM, BM1 and BM2 must already be
+% detached.  (S)
+% -------------------------------------------------------------
+
+[!(a_om_detach_lm && a_lm_detach_bm1 && a_lm_detach_bm2)*  . a_cm_detach_cover] false
+&&
+
+% -------------------------------------------------------------
+% The systems should be deadlock-free, except for the last state. (L & S)
+% -------------------------------------------------------------
+
+nu X.((<true>true) && [true]X) || <a_cm_open_doors> true

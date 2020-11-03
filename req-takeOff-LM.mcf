@@ -1,0 +1,26 @@
+% -------------------------------------------------------------
+% LM must not detach BM1 and BM2 from itself before their fuel is depleted.(S)
+% -------------------------------------------------------------
+
+[!(p_bm1_thruster_level(0) || p_bm1_thruster_level(0))* . (a_lm_detach_bm1 || a_lm_detach_bm2)] false
+&&
+
+% -------------------------------------------------------------
+% The fuel of LM must not be depleted before BM1 and BM2 are detached. (S)
+% -------------------------------------------------------------
+
+[!p_lm_thruster_level(0)* . (a_lm_detach_bm2 || a_lm_detach_bm2)] false
+&&
+
+% -------------------------------------------------------------
+% The  thruster  of  LM  is  eventually  turned  off  after  having  breached  theatmosphere.  (L)
+% -------------------------------------------------------------
+
+[true* . p_below_atmosphere(false)]<true* . a_lm_thruster_stop>true
+&&
+
+% -------------------------------------------------------------
+% The LM module cannot be detached before BM1 and BM2 are detached.(S)
+% -------------------------------------------------------------
+
+[!a_om_detach_lm* . (a_lm_detach_bm1 | a_lm_detach_bm2)] false

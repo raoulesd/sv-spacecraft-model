@@ -1,0 +1,13 @@
+% -------------------------------------------------------------
+% OM must not detach LM from itself before its fuel is depleted.  (S)
+% -------------------------------------------------------------
+
+[!p_lm_thruster_level(0)* . a_om_detach_lm] false
+&&
+
+% -------------------------------------------------------------
+% Only after the OM is detached, it fires its thrusters to get clear from the
+% SM. (S)
+% -------------------------------------------------------------
+
+[!a_sm_detach_om* . a_om_thruster_burst] false

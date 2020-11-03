@@ -1,0 +1,21 @@
+% -------------------------------------------------------------
+% The thrusters of the SM steer the spacecraft towards the ISS when it isidentified.  (L)
+% -------------------------------------------------------------
+
+[true* . p_iss_identified(true)] <!c_sm_thruster_stop* . a_sm_steer_thrusters> true
+&&
+
+% -------------------------------------------------------------
+% The thrusters of the SM do not fire when the camera has not identified the ISS. (S)
+% -------------------------------------------------------------
+
+[!p_iss_identified(true)* . a_sm_steer_thrusters] false
+&&
+
+% -------------------------------------------------------------
+% The SM thrusters only move the spacecraft into docking position after thespacecraft receives the OK signal.  (S)
+% -------------------------------------------------------------
+
+[!p_signal_received(true)* . p_docking_position(false)] false &&
+[!p_signal_received(true)* . p_docking_position(true)] false &&
+[true* . p_signal_received(true)] <true* . p_docking_position(true)> true
