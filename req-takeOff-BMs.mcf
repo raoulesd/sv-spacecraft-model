@@ -11,6 +11,6 @@
 % firing and should fire not fire again during the mission cycle.  (S)
 % -------------------------------------------------------------
 
-[p_bm1_thruster_level(0) . true* . a_bm2_thruster_stop] true && [p_bm2_thruster_level(0) . true* .  a_bm1_thruster_stop] true && 
-[p_bm1_thruster_level(0) . true* . a_bm2_thruster_stop] <true* . a_bm1_thruster_start> false && 
-[p_bm1_thruster_level(0) . true* . a_bm2_thruster_stop] <true* . a_bm2_thruster_start> false
+[p_bm1_thruster_level(0) . true*] <a_bm2_thruster_stop> true && [p_bm2_thruster_level(0) . true*] <a_bm1_thruster_stop> true && 
+[p_bm1_thruster_level(0) . true* . a_bm2_thruster_stop . true* . a_bm1_thruster_start] false && 
+[p_bm1_thruster_level(0) . true* . a_bm2_thruster_stop . true* . a_bm2_thruster_start] false

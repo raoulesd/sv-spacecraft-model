@@ -2,7 +2,7 @@
 % Throughout the docking process, the tracker camera of the CM is used toattempt to identify the ISS. (L)
 % -------------------------------------------------------------
 
-[p_signal_received(true)] <!p_docking_position(true)* . p_docking_position(false)> true &&
+[p_signal_received(true)] <!p_docking_position(false)* . p_docking_position(false)> true &&
 [p_signal_received(true)] <!p_docking_position(true)* . p_docking_position(true)> true
 &&
 
@@ -14,7 +14,7 @@
 &&
 
 % -------------------------------------------------------------
-% The CM does not attempt docking when the spacecraft is not in dockingposition.  (S)
+% The CM does not attempt docking when the spacecraft is not in docking position.  (S)
 % -------------------------------------------------------------
 
 [!p_docking_position(true)* . a_cm_lock_doors] false &&

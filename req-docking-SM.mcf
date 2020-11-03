@@ -1,5 +1,5 @@
 % -------------------------------------------------------------
-% The thrusters of the SM steer the spacecraft towards the ISS when it isidentified.  (L)
+% The thrusters of the SM steer the spacecraft towards the ISS when it is identified.  (L)
 % -------------------------------------------------------------
 
 [true* . p_iss_identified(true)] <!c_sm_thruster_stop* . a_sm_steer_thrusters> true
@@ -13,7 +13,7 @@
 &&
 
 % -------------------------------------------------------------
-% The SM thrusters only move the spacecraft into docking position after thespacecraft receives the OK signal.  (S)
+% The SM thrusters only move the spacecraft into docking position after the spacecraft receives the OK signal.  (S)
 % -------------------------------------------------------------
 
 [!p_signal_received(true)* . p_docking_position(false)] false &&
