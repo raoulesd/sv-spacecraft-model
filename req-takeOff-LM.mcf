@@ -16,7 +16,7 @@
 % The  thruster  of  LM  is  eventually  turned  off  after  having  breached  the atmosphere.  (L)
 % -------------------------------------------------------------
 
-[true* . p_below_atmosphere(false)]<true* . a_lm_thruster_stop>true
+[true* . p_below_atmosphere(false)]<true* . a_lm_thruster_stop> true
 &&
 
 % -------------------------------------------------------------

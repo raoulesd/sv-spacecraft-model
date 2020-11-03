@@ -6,8 +6,7 @@
 &&
 
 % -------------------------------------------------------------
-% Only after the OM is detached, it fires its thrusters to get clear from the
-% SM. (S)
+% Only after the OM is detached, it fires its thrusters to get clear from the SM. (S)
 % -------------------------------------------------------------
 
 [!a_sm_detach_om* . a_om_thruster_burst] false
