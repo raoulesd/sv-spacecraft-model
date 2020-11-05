@@ -1,4 +1,13 @@
 % -------------------------------------------------------------
+% To lift the spacecraft from the ground LM, BM1 and BM2 are all used 
+% simultaneously. (L)
+% ------------------------------------------------------------- 
+
+<c_launch_signal . a_bm1_thruster_start | a_bm2_thruster_start | a_lm_thruster_start> true
+&&
+
+
+% -------------------------------------------------------------
 % BM1,  BM2  and  LM  must be turned off before they are detached and
 % jettisoned.  (S)
 % -------------------------------------------------------------
