@@ -48,7 +48,7 @@ act
   	s_abort, r_abort, c_abort;
 
 proc
-
+	%Phase one take off
 	Starter = s_launch_signal . delta;
 
   	BM1_Thruster = r_launch_signal_bm1 . a_bm1_thruster_start . BM1_Thruster_active;
@@ -68,6 +68,7 @@ proc
 
   	SM_Detachment = r_sm_detach_om . a_sm_detach_om  . s_om_detached . Docking_controller;
 
+	%Phase two docking
 	Docking_controller = r_om_thruster_bursted . s_sm_thruster_start . p_iss_identified(true) .  r_sm_thruster_active(true) . s_sm_steer_thrusters . p_within_200m_radius(false) . s_sm_thruster_stop . r_sm_thruster_active(false) . Waiting +
 							p_iss_identified(false) . Docking_controller;
 
