@@ -1,10 +1,8 @@
 # sv-spacecraft-model
-A simplified MCRL2 model of a spacecraft according to a mission plan
+A simplified MCRL2 model of a spacecraft according to a mission plan.
 
-The model is partitioned into two phases, modeled seperately in `model-takeOff.mcrl2` and `model-docking.mcrl2`, showing the take off and docking phase respectively. (Currently not up to date)
+The file `model.mcrl2` contains the mCRL2 model of our spacecraft.
 
-Both are combined in the final model, to be found in `model.mcrl2`.
-
-The requirements are divided into two files, one per phase. These are `req-takeOff.mcf` and `req-docking.mcf` respectively.
+The requirements are divided into files based on the modules they corrrespond to in combination with the phase they belong to. this results in the following files: `req-docking-CM.mcf`, `req-docking-SM.mcf`, `req-takeOff-BMs.mcf`, `req-takeOff-LM.mcf` `req-takeOff-OM.mcf`, `req-takeOff-SM.mcf`. There is also a file for the more general requirements for the take off phase located in `req-takeOff-general.mcf`.
 
 
