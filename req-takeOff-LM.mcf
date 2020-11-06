@@ -23,4 +23,4 @@
 % The LM module cannot be detached before BM1 and BM2 are detached.(S)
 % -------------------------------------------------------------
 
-[!a_om_detach_lm* . (a_lm_detach_bm1 | a_lm_detach_bm2)] false
+[true* . a_om_detach_lm . true* .(a_lm_detach_bm1 | a_lm_detach_bm2)] false
